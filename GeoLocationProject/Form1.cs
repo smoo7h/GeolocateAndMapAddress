@@ -81,16 +81,10 @@ namespace GeoLocationProject
 
         void bgworker_DoWork(object sender, DoWorkEventArgs e)
         {
-           // currentCount++;
-
-            if (runningCount > 5)
-            {
-               // Thread.Sleep(3000);
-            }
 
             Address add = e.Argument as Address;
             GeoCode geo = GetLongAndLat(add.AddressName, add.Location, add.index);
-            geo.Name = add.AddressName;
+            geo.Name = add.CompanyName;
             e.Result = geo;
             
         
@@ -98,8 +92,6 @@ namespace GeoLocationProject
 
         public GeoCode GetLongAndLat(string address , string Location, int index)
         {
-            //toosmooth key AIzaSyCQz1oqJmJrzVrvMllR95dwhAAoup8IopU       AIzaSyAkDqc5_AK6b2FRh3DcH2QkvGYo1rP1TO0
-            //gs key        AIzaSyBG6Rd7tKOlrLSHyAnVrBujwS1BUNhePmY;
             Thread.Sleep(3000);
             //reformat name
             string formattedName = address.Trim().Replace(" ", "+");
@@ -111,7 +103,7 @@ namespace GeoLocationProject
 
             string url = @"https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + formattedName + @"&key=" + apiKey; ;
 
-            string jsontxt;//AIzaSyBLAlQLaDjTN9vk12oKetgSW_lI3lEjRx0
+            string jsontxt;
 
             try
             {
@@ -134,6 +126,7 @@ namespace GeoLocationProject
                     geocode.Longitude = lon;
                     geocode.index = index;
                     geocode.FullAddress = fulladdress;
+                    
 
                 }
                 else
@@ -272,6 +265,7 @@ namespace GeoLocationProject
                 Address add = new Address();
 
                 add.AddressName = CleanUpText(this.spreadsheetControl1.ActiveWorksheet.Cells[i, 0].Value.ToString());
+                add.CompanyName = this.spreadsheetControl1.ActiveWorksheet.Cells[i, 1].Value.ToString();
                 add.Location = location;
                 add.index = i;
 
@@ -296,6 +290,7 @@ namespace GeoLocationProject
         public string Location { get; set; }
         public int index { get; set; }
         public string FullAddress { get; set; }
+        public string CompanyName { get; set; }
     }
 
     public class GeoCode
